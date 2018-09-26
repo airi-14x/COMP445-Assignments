@@ -2,7 +2,7 @@ import socket
 import argparse
 import sys
 
-// GET Request //
+# GET Request #
 # Create Socket
 # Bind socket to port of target host
 # Encode raw request/(User input): <string>.encode("utf-8") to be sent as bytes
