@@ -2,14 +2,6 @@ import socket
 import argparse
 import sys
 
-# GET Request #
-# Create Socket
-# Bind socket to port of target host
-# Encode raw request/(User input): <string>.encode("utf-8") to be sent as bytes
-# Send encoded raw request via sendall : socket.sendall("raw request")
-# receive response sock.recv(size<bytes>, socket.MSG_WAITALL)
-# decode response to string with <string>.decode(“utf-8”) for display
-# Close Socket connection.
 
 def run_httpclient(host, port):
 
