@@ -9,7 +9,7 @@ def run_client(host, port):
         conn.connect((host, port))
         print("Type any thing then ENTER. Press Ctrl+C to terminate")
         while True:
-            line = sys.stdin.readline(1024)
+            line = sys.tdin.readline(1024)
             request = line.encode("utf-8")
             conn.sendall(request)
             # MSG_WAITALL waits for full request or error
