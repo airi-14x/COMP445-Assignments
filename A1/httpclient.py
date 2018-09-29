@@ -12,6 +12,11 @@ def run_httpclient(host, port):
 		while True:
 			#line = sys.stdin.readline(1024)
 			request = ("GET /status/418 HTTP/1.0\r\nHost: httpbin.org\r\n\r\n")
+			'''EXAMPLE POST REQUEST LINE
+				    request = ("POST /post HTTP/1.0\r\nHost: httpbin.org\r\nsmol:duck\r\n\r\n")
+					Header information can be sent.
+					Issue: sending body information
+			'''
 			request = request.encode("utf-8")
             #request = line.encode("utf-8")
 			sock.sendall(request)
