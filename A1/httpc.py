@@ -37,7 +37,11 @@ def run_httpclient(httpc, port, url, verbosity, header, data, file):
 			full_request = (request_line + header_lines).encode("utf-8")
         
 		elif httpc == "post":
-			header_lines += "Content-Type:application/json\r\n"     
+			body = data
+			header_lines += "Content-Type:application/json\r\n"  
+			if(header != None):
+				header_lines += header + "\r\n"
+			header_lines += "Content-Length:" +str(len(body)) +"\r\n\r\n"
 			full_request = (request_line+header_lines+body).encode("utf-8")
 
 		sock.sendall(full_request)
@@ -45,8 +49,7 @@ def run_httpclient(httpc, port, url, verbosity, header, data, file):
 		response = response.decode("utf-8")
        
 		if not verbosity:
-            #remove headers#
-			print("Not verbose, remove headers. This is a dummy line so python won't complain")
+			response = response.split("\r\n\r\n")[1]
 		sys.stdout.write(response)
 
 	finally:
