@@ -37,7 +37,14 @@ def run_httpclient(httpc, port, url, verbosity, header, data, file):
 			full_request = (request_line + header_lines).encode("utf-8")
         
 		elif httpc == "post":
+			#We work under the assumption that data will be provided from either -d or -f
 			body = data
+            #In the case where both -d and -f are present, -d is given priority
+			if data == None and file != None:
+                ##read from file  
+				current_file = open(file,"r")
+				body = current_file.read()
+				current_file.close()
 			header_lines += "Content-Type:application/json\r\n"  
 			if(header != None):
 				header_lines += header + "\r\n"
@@ -106,3 +113,4 @@ args = parser.parse_args()
 
 run_httpclient(args.httpc, args.port, args.URL, args.v, args.header, args.d, args.f)
 #run_httpclient(args.host, args.port)
+
