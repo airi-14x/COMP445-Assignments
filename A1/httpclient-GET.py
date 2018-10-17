@@ -24,7 +24,8 @@ def run_httpclient(host, port):
 
             #request = line.encode("utf-8")
 
-			sock.sendall(full_request)
+			#sock.sendall(full_request)
+			sock.sendall(request)
 			response = sock.recv(1024,socket.MSG_WAITALL)
 			response = response.decode("utf-8")
 			sys.stdout.write(response)
