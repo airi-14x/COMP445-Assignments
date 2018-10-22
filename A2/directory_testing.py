@@ -20,5 +20,5 @@ def check_dir(path):
 rootdir = os.getcwd()
 for subdir, dirs, files in os.walk(rootdir):
     for file in files:
-    	if(str(file).endswith(".txt")): #example of having the request header "Accept : .txt"
-    		print( os.path.join(subdir, file))
+    	#if(file.endswith(".txt")): #example of having the request header "Accept : .txt"
+    	print( os.path.join(subdir, file))
