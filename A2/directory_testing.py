@@ -11,7 +11,14 @@ def check_dir(path):
 		current_dir = os.listdir(os.getcwd())
 	for filename in current_dir:
 		if(os.path.isdir(filename)):
-
-	pass
-
-check_dir(None)
+			print("[Folder]" + filename)
+			check_dir(filename)
+		else:
+			print(filename)
+	
+'''
+rootdir = os.getcwd()
+for subdir, dirs, files in os.walk(rootdir):
+    for file in files:
+    	if(str(file).endswith(".txt")): #example of having the request header "Accept : .txt"
+    		print( os.path.join(subdir, file))
