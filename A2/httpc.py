@@ -110,7 +110,6 @@ parser.add_argument("-header", help = "additional header line for the request, h
 parser.add_argument("-d",help = " inline data to be used as body of request", type = str, default = None)
 parser.add_argument("-f", help = "fielpath for body data", type = str,default = None)
 args = parser.parse_args()
-
 run_httpclient(args.httpc, args.port, args.URL, args.v, args.header, args.d, args.f)
 #run_httpclient(args.host, args.port)
 
