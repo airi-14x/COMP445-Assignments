@@ -1,5 +1,6 @@
 import os
 import sys
+'''
 root_dir = os.listdir()
 print()
 
@@ -10,8 +11,6 @@ def check_dir(path):
 		current_dir = os.listdir(os.getcwd())
 	for filename in current_dir:
 		if(os.path.isdir(filename)):
-			filename = "[Folder]" + filename
-		print(filename)
 
 	pass
 
