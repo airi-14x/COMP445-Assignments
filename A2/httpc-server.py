@@ -8,6 +8,10 @@ import sys
 
 current_dir = os.getcwd()
 response_body = ""
+status_line = "HTTP/1.0 "
+status_codes = {200 : "200 OK \r\n",
+                        400: "400 Bad Request \r\n",
+                        404: "404 Not Found\r\n"}
 def run_server(host,port):
     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -21,6 +25,9 @@ def run_server(host,port):
         listener.close()
 
 def handle_client(conn,addr):
+    global response_body
+    global status_line
+    global status_codes
     print(addr, " has connected.")
     try:
         data = conn.recv(1024)
@@ -42,12 +49,14 @@ def handle_client(conn,addr):
                 #call GET/
             else:
                 print("GET/foo")
+                return_content(request_path)
                 #call GET/foo
         elif request_method == "POST":
             print("POST /bar")
             #call POST/bar
         else:
             print("Bad Req")
+            status_line += status_code[400]
             #bad request
         
         #  Call GET / POST Functions #
@@ -57,11 +66,8 @@ def handle_client(conn,addr):
         # Yep. We need to be able to tell if it's a 404 or a 200 and stuff like that. Those require going through the functions we made
         
         # Response Message #
-        status_line = "HTTP/1.0 "
-        status_codes = {200 : "200 OK \r\n",
-                        400: "400 Bad Request \r\n",
-                        404: "404 Not Found\r\n"}
-        status_line += status_codes[200]   # Need to set the status code 'n' value #  
+        
+        #status_line += status_codes[200]   # Need to set the status code 'n' value #  
    
         general_headers = "Date: "
         current_time = strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " GMT\r\n"
@@ -76,18 +82,37 @@ def handle_client(conn,addr):
         #dummy_response = "fake status line\r\nfake header \r\n\r\n body: request ack"
         #conn.sendall(dummy_response.encode('utf-8'))
         conn.sendall(response.encode('utf-8'))
+        response_body = ""
+        status_line = "HTTP/1.0 "
         #how does this look?, tried to keep the http message format but it's nice to know if we can send stuff back
     finally:
         conn.close()
 
 def show_directory():
     global response_body
+    global status_line
+    global status_codes
     rootdir = os.getcwd()
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
         #if(file.endswith(".txt")): #example of having the request header "Accept : .txt"
             response_body+=( os.path.join(subdir, file)) + "\n"
-        
+    status_line += status_codes[200]
+def return_content(request_path):
+    global response_body
+    global status_line
+    global status_codes
+    global current_dir
+    request_path = current_dir+request_path
+    if(os.path.isfile(request_path)):
+        current_file = open(request_path,"r")
+        response_body = current_file.read()
+        print(response_body)
+        current_file.close()
+        status_line += status_codes[200]
+    else:
+        status_line += status_codes[404]
+     
 parser = argparse.ArgumentParser()
 parser.add_argument("--port", help="echo server port", type=int, default=8007)
 parser.add_argument("-v", help="printing debugging message", action="store_true")
@@ -95,4 +120,3 @@ parser.add_argument("-d", help="directory path", type=str, default=current_dir)
 args = parser.parse_args()
 current_dir = args.d
 run_server('', args.port)
-
