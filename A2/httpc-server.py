@@ -58,7 +58,6 @@ def handle_client(conn,addr):
                 show_directory()
                 #call GET/
             else:
-                print("GET/foo")
                 return_content(request_path)
                 #call GET/foo
         elif request_method == "POST" and request_body != None:
