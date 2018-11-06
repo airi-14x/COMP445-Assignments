@@ -6,7 +6,7 @@ from time import gmtime, strftime
 import os
 import sys
 
-current_dir = os.getcwd()
+current_dir = ""
 response_body = ""
 status_line = "HTTP/1.0 "
 status_codes = {200 : "200 OK \r\n",
@@ -65,7 +65,7 @@ def handle_client(conn,addr):
             write_file(request_path, request_body)
         else:
             print("Bad Req")
-            status_line += status_code[400]
+            status_line += status_codes[400]
             #bad request
         
         #  Call GET / POST Functions #
