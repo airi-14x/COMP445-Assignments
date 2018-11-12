@@ -3,6 +3,11 @@ import ipaddress
 MIN_LEN = 11
 MAX_LEN = 1024
 
+DATA = 0
+ACK = 1
+SYN = 2
+SYN_ACK = 3
+NAK = 4
 
 class Packet:
     """
