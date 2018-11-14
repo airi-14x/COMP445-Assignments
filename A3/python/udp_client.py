@@ -2,7 +2,7 @@ import argparse
 import ipaddress
 import socket
 import random
-import packet
+import packet as PKT
 
 from packet import Packet
 
@@ -29,15 +29,15 @@ def run_client(router_addr, router_port, server_addr, server_port):
         # Receiving SYN-ACK #
         conn.settimeout(timeout)
         print('Waiting for SYN-ACK')
-        expected_type = -1
-        expected_seq = -1
-        while(expected_type!=packet.SYN_ACK):
+        expected_type = PKT.SYN_ACK
+        rcv_pkt_type = -1
+        while(rcv_pkt_type!=PKT.SYN_ACK):
             response,sender = conn.recvfrom(1024)
             recv_pkt = Packet.from_bytes(response)
-            expected_type = recv_pkt.packet_type
+            rcv_pkt_type = recv_pkt.packet_type
             print('Payload for expected SYN_ACK: ' + recv_pkt.payload.decode("utf-8"))
         
-        send_ACK(conn,recv_pkt.peer_ip_addr,recv_pkt.port,recv_pkt.seq_num,peer_ip,server_port)
+        send_ACK(conn,recv_pkt.peer_ip_addr,recv_pkt.peer_port,recv_pkt.seq_num,peer_ip,server_port)
         ## Test the handshake ==> Resending packet version and the default version
                
     except socket.timeout:
@@ -47,7 +47,7 @@ def run_client(router_addr, router_port, server_addr, server_port):
 
 def send_SYN(conn, router_addr, router_port,peer_ip,server_port):
     print('Initiating three-way handshake\nSending SYN')
-    packet_type = packet.SYN
+    packet_type = PKT.SYN
     seq_num = random.randint(1,50)
     msg = "Initiating three-way handshake\nSending SYN"
     p = Packet(packet_type=packet_type,
@@ -58,10 +58,11 @@ def send_SYN(conn, router_addr, router_port,peer_ip,server_port):
     conn.sendto(p.to_bytes(), (router_addr, router_port))
 
 def send_ACK(conn, router_addr, router_port, seq_number,peer_ip,server_port):
-    new_packet_type = packet.ACK  
+    new_packet_type = PKT.ACK  
     new_peer_ip_addr = peer_ip  
     new_peer_port = server_port
-    new_seq_num = seq_num + 1 
+    new_seq_num = seq_number + 1 
+    print(new_seq_num)
     print ("Sending ACK")
     msg = "Sending ACK"
     p = Packet(packet_type=new_packet_type,
@@ -69,7 +70,7 @@ def send_ACK(conn, router_addr, router_port, seq_number,peer_ip,server_port):
                    peer_ip_addr=new_peer_ip_addr,
                    peer_port=new_peer_port,
                    payload=msg.encode("utf-8")) 
-    conn.sendto(p.to_bytes(),(router_addr, router_port))
+    conn.sendto(p.to_bytes(),(str(router_addr), router_port))
 # Usage:
 # python echoclient.py --routerhost localhost --routerport 3000 --serverhost localhost --serverport 8007    
 parser = argparse.ArgumentParser()
